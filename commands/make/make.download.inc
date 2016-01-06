@@ -195,6 +195,29 @@ function make_download_get($name, $type, $download, $download_location) {
 }
 
 /**
+ * Download via Gitlab API the specific revision.
+ *
+ * Allowed paramenters in $download, in order of precedence:
+ *   - 'revision'
+ *   - 'token'
+ *   - 'project_id'
+ *   - 'gitlab_url'
+ *
+ * @return mixed
+ *   The download location on success, FALSE otherwise.
+ */
+function make_download_gitlab($name, $type, $download, $download_location) {
+  $revision = $download['revision'];
+  $token = $download['token'];
+  $project_id = $download['project_id'];
+  $url = $download['gitlab_url'];
+
+  $download['url'] = "$url/api/v3/projects/$project_id/repository/archive?sha=$revision&private_token=$token";
+
+  return make_download_file($name, $type, $download, $download_location);
+}
+
+/**
  * Copies a folder the specified location.
  *
  * @return mixed
